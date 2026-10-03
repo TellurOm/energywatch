@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="EnergyWatch — Smart Household Energy Monitoring, Appliance Tracking, Bill Forecasting, and Conservation Insights.">
+  <meta name="theme-color" content="#047857">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="EnergyWatch">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <title>EnergyWatch — Smart Energy Insights</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Material Symbols Rounded -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <!-- App Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Top Application Header -->
+  <header class="app-header">
+    <div class="brand-wrapper" onclick="window.energyApp.switchTab('dashboard')">
+      <div class="brand-icon">
+        <span class="material-symbols-rounded">bolt</span>
+      </div>
+      <span class="brand-title">EnergyWatch</span>
+    </div>
+
+    <div class="header-actions">
+      <!-- Demo Mode Pill Badge -->
+      <button class="pill-badge" onclick="window.energyApp.openModal('demo-info-modal')" title="About Demo Simulation">
+        <span class="pulse-dot"></span>
+        <span>Demo Mode</span>
+        <span class="material-symbols-rounded" style="font-size: 14px;">info</span>
+      </button>
+
+      <!-- Theme Switcher Pill -->
+      <button class="pill-badge" onclick="window.energyApp.toggleTheme()" title="Toggle Dark/Light Mode">
+        <span class="material-symbols-rounded" id="header-theme-icon" style="font-size: 16px; color: #F59E0B;">dark_mode</span>
+        <span id="header-theme-text">Dark</span>
+      </button>
+
+      <!-- Settings Shortcut -->
+      <button class="icon-btn" onclick="window.energyApp.openModal('settings-modal')" title="Settings & Simulation Controls">
+        <span class="material-symbols-rounded">settings</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Body Layout: Sidebar + Main Content -->
+  <div class="app-body">
+    <!-- Desktop Sidebar Navigation Rail -->
+    <nav class="sidebar-rail" aria-label="Desktop Navigation">
+      <div class="nav-item active" data-tab="dashboard" onclick="window.energyApp.switchTab('dashboard')">
+        <div class="nav-icon-container">
+          <span class="material-symbols-rounded">dashboard</span>
+        </div>
+        <span class="nav-label">Dashboard</span>
+      </div>
+
+      <div class="nav-item" data-tab="consumption" onclick="window.energyApp.switchTab('consumption')">
+        <div class="nav-icon-container">
+          <span class="material-symbols-rounded">insights</span>
+        </div>
+        <span class="nav-label">Consumption</span>
+      </div>
+
+      <div class="nav-item" data-tab="appliances" onclick="window.energyApp.switchTab('appliances')">
+        <div class="nav-icon-container">
+          <span class="material-symbols-rounded">devices_other</span>
+        </div>
+        <span class="nav-label">Appliances</span>
+      </div>
+
+      <div class="nav-item" data-tab="bill" onclick="window.energyApp.switchTab('bill')">
+        <div class="nav-icon-container">
+          <span class="material-symbols-rounded">receipt_long</span>
+        </div>
+        <span class="nav-label">Bill</span>
+      </div>
+
+      <div class="nav-item" data-tab="savings" onclick="window.energyApp.switchTab('savings')">
+        <div class="nav-icon-container">
+          <span class="material-symbols-rounded">savings</span>
+        </div>
+        <span class="nav-label">Savings</span>
+      </div>
+    </nav>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="bottom-nav" aria-label="Mobile Navigation">
+      <div class="nav-item active" data-tab="dashboard" onclick="window.energyApp.switchTab('dashboard')">
+        <div class="nav-icon-container">
+          <span class="material-symbols-rounded">dashboard</span>
+        </div>
+        <span class="nav-label">Dashboard</span>
+      </div>
+
+      <div class="nav-item" data-tab="consumption" onclick="window.energyApp.switchTab('consumption')">
+        <div class="nav-icon-container">
+          <span class="material-symbols-rounded">insights</span>
+        </div>
+        <span class="nav-label">History</span>
+      </div>
+
+      <div class="nav-item" data-tab="appliances" onclick="window.energyApp.switchTab('appliances')">
+        <div class="nav-icon-container">
+          <span class="material-symbols-rounded">devices_other</span>
+        </div>
+        <span class="nav-label">Appliances</span>
+      </div>
+
+      <div class="nav-item" data-tab="bill" onclick="window.energyApp.switchTab('bill')">
+        <div class="nav-icon-container">
+          <span class="material-symbols-rounded">receipt_long</span>
+        </div>
+        <span class="nav-label">Bill</span>
+      </div>
+
+      <div class="nav-item" data-tab="savings" onclick="window.energyApp.switchTab('savings')">
+        <div class="nav-icon-container">
+          <span class="material-symbols-rounded">savings</span>
+        </div>
+        <span class="nav-label">Savings</span>
+      </div>
+    </nav>
+
+    <!-- Main Screens Container -->
+    <main class="main-content">
+
+      <!-- ================= 1. DASHBOARD SCREEN ================= -->
+      <section id="view-dashboard" class="view-section active">
+        <!-- Greeting Header -->
+        <div class="section-header">
+          <h1 class="section-title">Hello, Amitabh 👋</h1>
+          <p class="section-subtitle">Here's your household energy overview for today</p>
+        </div>
+
+        <!-- Weekly Status Banner -->
+        <div class="status-banner">
+          <div class="status-banner-content">
+            <span class="material-symbols-rounded status-banner-icon">check_circle</span>
+            <div class="status-banner-text">
+              You're using <strong>8.1% less energy</strong> than your previous week. Keep it up!
+            </div>
+          </div>
+          <button class="btn btn-text" onclick="window.energyApp.switchTab('consumption')" style="font-size: 0.8rem; font-weight: 700;">
+            View Details →
+          </button>
+        </div>
+
+        <!-- 4 Top Executive Stat Cards -->
+        <div class="stats-grid">
+          <!-- Card 1: Today's Consumption -->
+          <div class="card stat-card" onclick="window.energyApp.switchTab('consumption')">
+            <div class="stat-header">
+              <span class="stat-title">Today's Consumption</span>
+              <div class="stat-icon-wrapper">
+                <span class="material-symbols-rounded">today</span>
+              </div>
+            </div>
+            <div class="stat-value">6.72 kWh</div>
+            <div class="stat-trend trend-down">
+              <span class="material-symbols-rounded" style="font-size: 16px;">arrow_downward</span>
+              <span>5.4% vs yesterday</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Monthly Consumption -->
+          <div class="card stat-card" onclick="window.energyApp.switchTab('consumption')">
+            <div class="stat-header">
+              <span class="stat-title">Monthly Usage</span>
+              <div class="stat-icon-wrapper">
+                <span class="material-symbols-rounded">calendar_month</span>
+              </div>
+            </div>
+            <div class="stat-value">184.5 kWh</div>
+            <div class="stat-trend trend-down">
+              <span class="material-symbols-rounded" style="font-size: 16px;">arrow_downward</span>
+              <span>8.5% vs last month</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Estimated Bill -->
+          <div class="card stat-card" onclick="window.energyApp.switchTab('bill')">
+            <div class="stat-header">
+              <span class="stat-title">Estimated Bill</span>
+              <div class="stat-icon-wrapper">
+                <span class="material-symbols-rounded">receipt</span>
+              </div>
+            </div>
+            <div class="stat-value">₹1,576</div>
+            <div class="stat-subtitle">Base tariff @ ₹8.00 / unit</div>
+          </div>
+
+          <!-- Card 4: Potential Savings -->
+          <div class="card stat-card" onclick="window.energyApp.switchTab('savings')">
+            <div class="stat-header">
+              <span class="stat-title">Potential Savings</span>
+              <div class="stat-icon-wrapper" style="color: var(--success);">
+                <span class="material-symbols-rounded">savings</span>
+              </div>
+            </div>
+            <div class="stat-value" style="color: var(--success);">₹286 <span style="font-size: 0.85rem; font-weight: 600;">/ mo</span></div>
+            <div class="stat-subtitle">From 6 conservation steps</div>
+          </div>
+        </div>
+
+        <!-- Live Current Active Power Load Card -->
+        <div class="card live-load-card">
+          <div class="live-load-info">
+            <div>
+              <div class="live-pulse-badge">
+                <span class="pulse-dot"></span>
+                <span>Active Demand</span>
+              </div>
+              <div class="live-load-value-row">
+                <span class="live-load-number" id="live-load-val">1.84</span>
+                <span class="live-load-unit">kW</span>
+              </div>
+              <div class="live-load-meta" id="live-load-time">Updated just now</div>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <!-- Animated SVG Sparkline Wave -->
+            <svg class="live-chart-sparkline" viewBox="0 0 140 50">
+              <defs>
+                <linearGradient id="sparkGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#10B981" stop-opacity="0.4" />
+                  <stop offset="100%" stop-color="#10B981" stop-opacity="0.0" />
+                </linearGradient>
+              </defs>
+              <path d="M 0 35 Q 25 15, 50 30 T 100 20 T 140 28 L 140 50 L 0 50 Z" fill="url(#sparkGradient)" />
+              <path d="M 0 35 Q 25 15, 50 30 T 100 20 T 140 28" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" />
+            </svg>
+
+            <button class="icon-btn" onclick="window.energyApp.openModal('active-power-info-modal')" title="What is Active Power?">
+              <span class="material-symbols-rounded">help</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Consumption Trend Interactive Chart -->
+        <div class="card chart-card">
+          <div class="chart-header">
+            <div>
+              <h2 style="font-size: 1.1rem; font-weight: 800;">Consumption Trend</h2>
+              <p style="font-size: 0.8rem; color: var(--text-secondary);">Household daily kWh history</p>
+            </div>
+            <!-- Range Selector Pills -->
+            <div class="pill-group" id="dashboard-range-pills">
+              <button class="pill-btn active" data-filter="7D" onclick="window.energyApp.setFilter('7D')">7D</button>
+              <button class="pill-btn" data-filter="30D" onclick="window.energyApp.setFilter('30D')">30D</button>
+              <button class="pill-btn" data-filter="90D" onclick="window.energyApp.setFilter('90D')">90D</button>
+            </div>
+          </div>
+
+          <div class="svg-chart-container">
+            <svg id="dashboard-chart-svg"></svg>
+            <div id="dashboard-chart-tooltip" class="chart-tooltip"></div>
+          </div>
+
+          <div style="text-align: center; margin-top: 14px;">
+            <button class="btn btn-text" onclick="window.energyApp.switchTab('consumption')">
+              <span class="material-symbols-rounded" style="font-size: 18px;">analytics</span>
+              View Detailed Consumption Analytics
+            </button>
+          </div>
+        </div>
+
+        <!-- 2-Column Responsive Section: Timeline & Top Appliances -->
+        <div class="two-column-grid">
+          <!-- Today's Usage Timeline -->
+          <div class="card">
+            <h3 style="font-size: 1rem; font-weight: 800; margin-bottom: 4px;">Today's Usage Timeline</h3>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 16px;">Meter intervals throughout the day</p>
+
+            <div class="timeline-list">
+              <div class="timeline-item">
+                <div class="timeline-left">
+                  <span class="material-symbols-rounded" style="font-size: 18px; color: var(--text-muted);">schedule</span>
+                  <span class="timeline-time">08:00 AM</span>
+                </div>
+                <span class="timeline-kwh">0.82 kWh</span>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-left">
+                  <span class="material-symbols-rounded" style="font-size: 18px; color: var(--text-muted);">schedule</span>
+                  <span class="timeline-time">10:00 AM</span>
+                </div>
+                <span class="timeline-kwh">1.10 kWh</span>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-left">
+                  <span class="material-symbols-rounded" style="font-size: 18px; color: var(--text-muted);">schedule</span>
+                  <span class="timeline-time">12:00 PM</span>
+                </div>
+                <span class="timeline-kwh">1.46 kWh</span>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-left">
+                  <span class="material-symbols-rounded" style="font-size: 18px; color: var(--text-muted);">schedule</span>
+                  <span class="timeline-time">02:00 PM</span>
+                </div>
+                <span class="timeline-kwh">1.02 kWh</span>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-left">
+                  <span class="material-symbols-rounded" style="font-size: 18px; color: var(--text-muted);">schedule</span>
+                  <span class="timeline-time">04:00 PM</span>
+                </div>
+                <span class="timeline-kwh">0.88 kWh</span>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-left">
+                  <span class="material-symbols-rounded" style="font-size: 18px; color: var(--warning);">wb_twilight</span>
+                  <span class="timeline-time">06:00 PM</span>
+                  <span class="badge-peak">Peak</span>
+                </div>
+                <span class="timeline-kwh">1.44 kWh</span>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-left">
+                  <span class="material-symbols-rounded" style="font-size: 18px; color: var(--warning);">wb_twilight</span>
+                  <span class="timeline-time">08:00 PM</span>
+                  <span class="badge-peak">Peak</span>
+                </div>
+                <span class="timeline-kwh">1.51 kWh</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top Energy Consumers -->
+          <div class="card">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+              <div>
+                <h3 style="font-size: 1rem; font-weight: 800;">Top Energy Consumers</h3>
+                <p style="font-size: 0.8rem; color: var(--text-secondary);">Highest contributors this month</p>
+              </div>
+              <button class="btn btn-text" onclick="window.energyApp.switchTab('appliances')" style="font-size: 0.8rem; padding: 4px 8px;">
+                View All
+              </button>
+            </div>
+
+            <div class="top-appliances-list" id="dashboard-top-appliances">
+              <!-- Rendered dynamically by JavaScript -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 2. CONSUMPTION SCREEN ================= -->
+      <section id="view-consumption" class="view-section">
+        <div class="section-header">
+          <h1 class="section-title">Consumption History</h1>
+          <p class="section-subtitle">Detailed electricity analytics & pattern discovery</p>
+        </div>
+
+        <!-- Filter Chips Bar -->
+        <div class="chips-bar">
+          <button class="chip-btn" onclick="window.energyApp.switchTab('consumption')">Today</button>
+          <button class="chip-btn active" onclick="window.energyApp.switchTab('consumption')">This Week (7 Days)</button>
+          <button class="chip-btn" onclick="window.energyApp.switchTab('consumption')">This Month (30 Days)</button>
+          <button class="chip-btn" onclick="window.energyApp.switchTab('consumption')">Last 90 Days</button>
+          <button class="chip-btn" onclick="alert('Custom date range calibrated to active 30-day window')">
+            <span class="material-symbols-rounded" style="font-size: 16px;">date_range</span>
+            Custom Range
+          </button>
+        </div>
+
+        <!-- 4 Metric Cards -->
+        <div class="stats-grid">
+          <div class="card stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Total Consumption</span>
+              <div class="stat-icon-wrapper">
+                <span class="material-symbols-rounded">electric_bolt</span>
+              </div>
+            </div>
+            <div class="stat-value">47.6 kWh</div>
+            <div class="stat-subtitle">Selected 7-day period</div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Average Daily</span>
+              <div class="stat-icon-wrapper">
+                <span class="material-symbols-rounded">speed</span>
+              </div>
+            </div>
+            <div class="stat-value">6.80 kWh</div>
+            <div class="stat-subtitle">Average per 24 hours</div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Peak Usage</span>
+              <div class="stat-icon-wrapper" style="color: var(--alert);">
+                <span class="material-symbols-rounded">vertical_align_top</span>
+              </div>
+            </div>
+            <div class="stat-value" style="color: var(--alert);">8.00 kWh</div>
+            <div class="stat-subtitle">Highest recorded day (Friday)</div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Lowest Usage</span>
+              <div class="stat-icon-wrapper" style="color: var(--success);">
+                <span class="material-symbols-rounded">vertical_align_bottom</span>
+              </div>
+            </div>
+            <div class="stat-value" style="color: var(--success);">5.80 kWh</div>
+            <div class="stat-subtitle">Base standby demand (Monday)</div>
+          </div>
+        </div>
+
+        <!-- Period Comparison Banner -->
+        <div class="status-banner" style="margin-bottom: 24px;">
+          <div class="status-banner-content">
+            <span class="material-symbols-rounded status-banner-icon">check_circle</span>
+            <div class="status-banner-text">
+              Great progress! Consumption is <strong>8.1% below</strong> the previous reference period (51.8 kWh).
+            </div>
+          </div>
+        </div>
+
+        <!-- Daily Trend Area Chart -->
+        <div class="card chart-card">
+          <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 4px;">Consumption Trend (This Week)</h3>
+          <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 16px;">Day-to-day aggregate meter readings</p>
+          <div class="svg-chart-container">
+            <svg id="consumption-trend-svg"></svg>
+            <div id="consumption-trend-tooltip" class="chart-tooltip"></div>
+          </div>
+        </div>
+
+        <!-- 24-Hour Load Profile Bar Chart -->
+        <div class="card chart-card">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+            <div>
+              <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 4px;">24-Hour Load Profile</h3>
+              <p style="font-size: 0.8rem; color: var(--text-secondary);">Identify high-demand intervals & grid peak surcharges</p>
+            </div>
+            <div style="display: flex; gap: 14px; font-size: 0.78rem; font-weight: 700;">
+              <span style="display: flex; align-items: center; gap: 6px;">
+                <span style="width: 10px; height: 10px; background: var(--primary); border-radius: 2px;"></span> Standard Hours
+              </span>
+              <span style="display: flex; align-items: center; gap: 6px;">
+                <span style="width: 10px; height: 10px; background: var(--warning); border-radius: 2px;"></span> Peak (6 PM–10 PM)
+              </span>
+            </div>
+          </div>
+          <div class="svg-chart-container" style="height: 220px;">
+            <svg id="hourly-chart-svg"></svg>
+          </div>
+        </div>
+
+        <!-- Appliance shortcut banner -->
+        <div class="card" style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div class="brand-icon" style="background: var(--primary-container); color: var(--primary);">
+              <span class="material-symbols-rounded">pie_chart</span>
+            </div>
+            <div>
+              <h4 style="font-weight: 800;">Appliance Breakdown</h4>
+              <p style="font-size: 0.8rem; color: var(--text-secondary);">See which appliances consumed the most energy during this period.</p>
+            </div>
+          </div>
+          <button class="btn btn-tonal" onclick="window.energyApp.switchTab('appliances')">
+            Inspect Appliances
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= 3. APPLIANCES SCREEN ================= -->
+      <section id="view-appliances" class="view-section">
+        <div class="section-header">
+          <h1 class="section-title">Appliances</h1>
+          <p class="section-subtitle">Track where your energy is going</p>
+        </div>
+
+        <!-- Summary Header Card -->
+        <div class="card" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; background: linear-gradient(135deg, var(--surface-color) 0%, var(--surface-variant) 100%);">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="brand-icon" style="width: 44px; height: 44px;">
+              <span class="material-symbols-rounded">devices</span>
+            </div>
+            <div>
+              <h3 style="font-weight: 800; font-size: 1.15rem;">10 Appliances Tracked</h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary);">Total Load: <strong>184.5 kWh/month</strong> (~₹1,476/mo)</p>
+            </div>
+          </div>
+          <div class="pill-badge" style="background: var(--primary-container); color: var(--on-primary-container);">
+            <span class="material-symbols-rounded" style="font-size: 16px;">bolt</span>
+            <span>Simulated Telemetry</span>
+          </div>
+        </div>
+
+        <!-- Top Consumers Comparison Section -->
+        <div class="card" style="margin-bottom: 24px;">
+          <h3 style="font-size: 1rem; font-weight: 800; margin-bottom: 4px;">Top Energy Consumers Comparison</h3>
+          <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 16px;">Visual distribution of household power consumption</p>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 4px;">
+                <span>Air Conditioner (1.5 kW)</span>
+                <span style="color: var(--alert);">39% (72.4 kWh)</span>
+              </div>
+              <div class="progress-track" style="height: 8px;">
+                <div class="progress-fill" style="width: 39%; background: var(--alert);"></div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 4px;">
+                <span>Water Heater (2.0 kW)</span>
+                <span style="color: var(--warning);">21% (38.7 kWh)</span>
+              </div>
+              <div class="progress-track" style="height: 8px;">
+                <div class="progress-fill" style="width: 21%; background: var(--warning);"></div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 4px;">
+                <span>Refrigerator (0.18 kW)</span>
+                <span style="color: var(--primary);">14% (25.8 kWh)</span>
+              </div>
+              <div class="progress-track" style="height: 8px;">
+                <div class="progress-fill" style="width: 14%; background: var(--primary);"></div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 4px;">
+                <span>Washing Machine (0.85 kW)</span>
+                <span style="color: var(--primary);">7% (12.9 kWh)</span>
+              </div>
+              <div class="progress-track" style="height: 8px;">
+                <div class="progress-fill" style="width: 7%; background: var(--primary);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Filter Chips -->
+        <div class="chips-bar">
+          <button class="chip-btn active" data-category="All" onclick="window.energyApp.filterCategory('All', this)">All</button>
+          <button class="chip-btn" data-category="Cooling" onclick="window.energyApp.filterCategory('Cooling', this)">Cooling</button>
+          <button class="chip-btn" data-category="Heating" onclick="window.energyApp.filterCategory('Heating', this)">Heating</button>
+          <button class="chip-btn" data-category="Kitchen" onclick="window.energyApp.filterCategory('Kitchen', this)">Kitchen</button>
+          <button class="chip-btn" data-category="Laundry" onclick="window.energyApp.filterCategory('Laundry', this)">Laundry</button>
+          <button class="chip-btn" data-category="Entertainment" onclick="window.energyApp.filterCategory('Entertainment', this)">Entertainment</button>
+          <button class="chip-btn" data-category="Work/Study" onclick="window.energyApp.filterCategory('Work/Study', this)">Work/Study</button>
+          <button class="chip-btn" data-category="Lighting" onclick="window.energyApp.filterCategory('Lighting', this)">Lighting</button>
+          <button class="chip-btn" data-category="Utility" onclick="window.energyApp.filterCategory('Utility', this)">Utility</button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-wrapper">
+          <span class="material-symbols-rounded search-icon">search</span>
+          <input type="text" id="appliance-search" class="search-input" placeholder="Search appliances by name or category..." oninput="window.energyApp.filterCategory(document.querySelector('.chip-btn.active')?.dataset.category || 'All', document.querySelector('.chip-btn.active'))">
+        </div>
+
+        <!-- 10 Appliance Cards Grid -->
+        <div class="appliances-grid" id="appliances-container">
+          <!-- Rendered dynamically by JavaScript -->
+        </div>
+      </section>
+
+      <!-- ================= 4. BILL ESTIMATOR SCREEN ================= -->
+      <section id="view-bill" class="view-section">
+        <div class="section-header">
+          <h1 class="section-title">Bill Estimator</h1>
+          <p class="section-subtitle">Forecast electricity bills, simulate tariffs, and understand cost structures</p>
+        </div>
+
+        <div class="bill-estimator-container">
+          <!-- Input Form Column -->
+          <div class="card">
+            <h3 style="font-size: 1.05rem; font-weight: 800; margin-bottom: 4px;">Tariff Configuration</h3>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 16px;">Customize billing rates and meter fees</p>
+
+            <!-- Tariff Switcher -->
+            <div class="segmented-toggle" id="tariff-mode-toggle">
+              <div class="segmented-option selected" data-mode="flat" onclick="window.energyApp.setTariffMode('flat')">
+                Flat Single Rate
+              </div>
+              <div class="segmented-option" data-mode="slab" onclick="window.energyApp.setTariffMode('slab')">
+                Progressive Slab Rate
+              </div>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <label class="form-label" style="margin-bottom: 0;">Monthly Consumption (kWh)</label>
+                <button type="button" class="btn btn-text" style="font-size: 0.75rem; padding: 2px 6px;" onclick="window.energyApp.useCurrentConsumption()">
+                  Use Current (184.5 kWh)
+                </button>
+              </div>
+              <input type="number" id="bill-input-kwh" class="form-input" value="184.5" step="0.1" oninput="window.energyApp.calculateBill()">
+            </div>
+
+            <div class="form-group" id="rate-input-group">
+              <label class="form-label">Electricity Rate (₹ / kWh)</label>
+              <input type="number" id="bill-input-rate" class="form-input" value="8.00" step="0.25" oninput="window.energyApp.calculateBill()">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Fixed Meter Charge (₹)</label>
+              <input type="number" id="bill-input-fixed" class="form-input" value="100.00" step="10" oninput="window.energyApp.calculateBill()">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Electricity Duty / Tax (%)</label>
+              <input type="number" id="bill-input-tax" class="form-input" value="0.0" step="1" oninput="window.energyApp.calculateBill()">
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="window.energyApp.calculateBill()">
+              <span class="material-symbols-rounded">calculate</span> Calculate Estimate
+            </button>
+          </div>
+
+          <!-- Output Bill Breakdown Column -->
+          <div class="card bill-hero-card">
+            <span class="badge-tag">Projected Monthly Total</span>
+            <div class="bill-amount-display" id="bill-hero-total">₹1,576.00</div>
+
+            <div style="margin-bottom: 16px;">
+              <span id="bill-comparison-diff" class="badge-tag badge-easy">↓ ₹138.00 vs last month</span>
+            </div>
+
+            <div class="bill-row-item">
+              <span style="color: var(--text-secondary);">Energy Charges</span>
+              <strong id="bill-breakdown-energy">₹1,476.00</strong>
+            </div>
+
+            <div class="bill-row-item">
+              <span style="color: var(--text-secondary);">Fixed Maintenance Charge</span>
+              <strong id="bill-breakdown-fixed">₹100.00</strong>
+            </div>
+
+            <div class="bill-row-item">
+              <span style="color: var(--text-secondary);">Tax & Surcharges</span>
+              <strong id="bill-breakdown-tax">₹0.00</strong>
+            </div>
+
+            <div class="bill-row-item total">
+              <span>Total Estimated Bill</span>
+              <strong style="color: var(--primary);">₹1,576.00</strong>
+            </div>
+
+            <div style="margin-top: 24px;">
+              <button class="btn btn-outlined" style="width: 100%;" onclick="window.energyApp.showSlabBreakdownModal()">
+                <span class="material-symbols-rounded">format_list_numbered</span>
+                View Detailed Computation
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 5. SAVINGS SCREEN ================= -->
+      <section id="view-savings" class="view-section">
+        <div class="section-header">
+          <h1 class="section-title">Save Energy</h1>
+          <p class="section-subtitle">Simple, data-driven habits to cut utility bills and environmental footprint</p>
+        </div>
+
+        <!-- Hero Savings Card -->
+        <div class="card" style="background: linear-gradient(135deg, rgba(4, 120, 87, 0.08) 0%, rgba(13, 148, 136, 0.08) 100%); border: 1px solid rgba(16, 185, 129, 0.3); margin-bottom: 24px;">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <span class="badge-tag badge-easy">Calculated Savings Potential</span>
+              <div style="font-size: 2.5rem; font-weight: 900; color: var(--text-primary); margin: 6px 0;">
+                ₹286 <span style="font-size: 1.1rem; font-weight: 600; color: var(--text-secondary);">/ month</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                Based on your current 184.5 kWh consumption profile and 6 identified conservation steps.
+              </p>
+            </div>
+
+            <!-- Environmental Metrics -->
+            <div style="display: flex; gap: 12px;">
+              <div class="card" style="padding: 12px 16px; background-color: var(--surface-color);">
+                <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Energy Saved</div>
+                <div style="font-size: 1.15rem; font-weight: 800; color: var(--primary);">~35.8 kWh</div>
+              </div>
+
+              <div class="card" style="padding: 12px 16px; background-color: var(--surface-color);">
+                <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">CO₂ Offset</div>
+                <div style="font-size: 1.15rem; font-weight: 800; color: var(--success);">~29.3 kg</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Habit Progress Bar -->
+          <div style="margin-top: 20px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; margin-bottom: 6px;">
+              <span style="color: var(--text-secondary);">Habits Adopted</span>
+              <span id="savings-adopted-count" style="color: var(--primary);">0 of 6 habits adopted</span>
+            </div>
+            <div class="progress-track" style="height: 8px;">
+              <div class="progress-fill" id="savings-progress-bar" style="width: 0%; background: var(--success);"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 Actionable Recommendation Cards Grid -->
+        <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 14px;">Personalized Recommendations</h3>
+        <div class="savings-grid" id="savings-tips-container">
+          <!-- Rendered dynamically by JavaScript -->
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ================= MODALS & DIALOGS ================= -->
+
+<!-- 1. About Demo Mode Modal -->
+<div id="demo-info-modal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">
+        <span class="material-symbols-rounded" style="color: var(--primary);">sensors</span>
+        About Demo Simulation
+      </div>
+      <button class="icon-btn" onclick="window.energyApp.closeModal('demo-info-modal')">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+    <div style="line-height: 1.6; font-size: 0.9rem; color: var(--text-secondary);">
+      <p style="font-weight: 700; color: var(--text-primary); margin-bottom: 10px;">
+        EnergyWatch is running on realistic simulated energy telemetry.
+      </p>
+      <p style="margin-bottom: 12px;">
+        No physical electricity meter, smart plug, or IoT sensor is connected to this device. 
+        The application is architected with a decoupled data layer (EnergyDataSource) so a real smart meter or utility API can seamlessly replace this demo data without rewriting UI components.
+      </p>
+      <div style="background-color: var(--surface-variant); padding: 14px; border-radius: var(--radius-md); margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+          <span class="material-symbols-rounded" style="color: var(--success); font-size: 18px;">check_circle</span>
+          <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);">Simulated load drifts in real time (1.70 – 2.15 kW)</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="material-symbols-rounded" style="color: var(--success); font-size: 18px;">check_circle</span>
+          <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);">Historical baseline calibrated to 184.5 kWh/month</span>
+        </div>
+      </div>
+    </div>
+    <div style="text-align: right;">
+      <button class="btn btn-primary" onclick="window.energyApp.closeModal('demo-info-modal')">Got it</button>
+    </div>
+  </div>
+</div>
+
+<!-- 2. Active Power Explanation Modal -->
+<div id="active-power-info-modal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">
+        <span class="material-symbols-rounded" style="color: var(--primary);">bolt</span>
+        Active Power Measurement
+      </div>
+      <button class="icon-btn" onclick="window.energyApp.closeModal('active-power-info-modal')">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+    <div style="line-height: 1.6; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 20px;">
+      <p style="margin-bottom: 12px;">
+        <strong>Active Power (kW)</strong> represents the instantaneous rate of electricity demand of active appliances in your household.
+      </p>
+      <p style="margin-bottom: 12px;">
+        In this prototype, readings fluctuate realistically between <strong>1.70 kW and 2.15 kW</strong> based on simulated appliance cycling.
+      </p>
+      <p>
+        When deployed with an IoT smart meter (such as an ESP32 ADE7758 / PZEM-004T current transformer clamp), this card displays real-time hardware sensor data.
+      </p>
+    </div>
+    <div style="text-align: right;">
+      <button class="btn btn-primary" onclick="window.energyApp.closeModal('active-power-info-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- 3. Appliance Details Modal (with Interactive Runtime Slider!) -->
+<div id="appliance-detail-modal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div class="appliance-icon-box" style="width: 40px; height: 40px;">
+          <span class="material-symbols-rounded" id="modal-app-icon">ac_unit</span>
+        </div>
+        <div>
+          <div class="modal-title" id="modal-app-name" style="margin-bottom: 2px;">Appliance Name</div>
+          <span id="modal-app-category" style="font-size: 0.75rem; color: var(--text-muted);">Category</span>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span id="modal-app-status" class="status-pill active">Active</span>
+        <button class="icon-btn" onclick="window.energyApp.closeModal('appliance-detail-modal')">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 4-metric grid -->
+    <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 18px;">
+      <div class="card" style="padding: 12px;">
+        <div class="metric-col-title">Power Rating</div>
+        <div class="metric-col-val" id="modal-metric-power">1.5 kW</div>
+      </div>
+      <div class="card" style="padding: 12px;">
+        <div class="metric-col-title">Daily Runtime</div>
+        <div class="metric-col-val" id="modal-metric-hours">5.2 hrs</div>
+      </div>
+      <div class="card" style="padding: 12px;">
+        <div class="metric-col-title">Monthly Load</div>
+        <div class="metric-col-val" id="modal-metric-monthly">72.4 kWh</div>
+      </div>
+      <div class="card" style="padding: 12px;">
+        <div class="metric-col-title">Est. Monthly</div>
+        <div class="metric-col-val" id="modal-metric-cost">₹579</div>
+      </div>
+    </div>
+
+    <!-- 7-day bar chart -->
+    <div class="card" style="margin-bottom: 18px;">
+      <h4 style="font-size: 0.9rem; font-weight: 800; margin-bottom: 12px;">7-Day Consumption Profile (kWh)</h4>
+      <div style="display: flex; gap: 8px; justify-content: space-between;" id="modal-weekly-bars"></div>
+    </div>
+
+    <!-- Efficiency Score -->
+    <div class="card" style="margin-bottom: 18px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <h4 style="font-size: 0.9rem; font-weight: 800;">Appliance Efficiency Rating</h4>
+        <strong id="modal-app-score" style="color: var(--primary); font-size: 1.1rem;">72%</strong>
+      </div>
+      <div class="progress-track" style="height: 8px;">
+        <div class="progress-fill" id="modal-app-score-bar" style="width: 72%; background: var(--primary);"></div>
+      </div>
+    </div>
+
+    <!-- Recommendation -->
+    <div style="background-color: var(--surface-variant); padding: 14px; border-radius: var(--radius-md); margin-bottom: 18px; border-left: 4px solid var(--primary);">
+      <div style="font-size: 0.8rem; font-weight: 800; color: var(--primary); margin-bottom: 4px;">Smart Conservation Recommendation:</div>
+      <p id="modal-app-recommendation" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.45;"></p>
+    </div>
+
+    <!-- Interactive Runtime Adjuster Simulator -->
+    <div class="card" style="background: linear-gradient(135deg, var(--surface-color) 0%, rgba(4, 120, 87, 0.05) 100%);">
+      <h4 style="font-size: 0.9rem; font-weight: 800; margin-bottom: 4px;">Interactive Runtime Simulator</h4>
+      <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 14px;">Drag to see instantaneous projected bill impact</p>
+
+      <div style="margin-bottom: 14px;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px;">
+          <span>Daily Runtime Slider</span>
+          <span id="modal-sim-hours-val" style="color: var(--primary);">5.2 hrs/day</span>
+        </div>
+        <input type="range" id="modal-runtime-slider" min="0" max="24" step="0.1" style="width: 100%; accent-color: var(--primary); cursor: pointer;">
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+        <div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Simulated Load</div>
+          <div style="font-size: 0.95rem; font-weight: 800;" id="modal-sim-kwh">72.4 kWh/mo</div>
+        </div>
+        <div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Simulated Cost</div>
+          <div style="font-size: 0.95rem; font-weight: 800;" id="modal-sim-cost">₹579</div>
+        </div>
+        <div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Bill Impact</div>
+          <div style="font-size: 0.95rem; font-weight: 800;" id="modal-sim-diff">No change</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. Savings Tip Steps Modal -->
+<div id="tip-steps-modal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">
+        <span class="material-symbols-rounded" id="tip-modal-icon" style="color: var(--primary);">thermostat</span>
+        <span id="tip-modal-title">Habit Title</span>
+      </div>
+      <button class="icon-btn" onclick="window.energyApp.closeModal('tip-steps-modal')">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+    <div class="card" style="padding: 10px 14px; background-color: var(--success-bg); border-color: var(--success-border); margin-bottom: 18px;">
+      <span id="tip-modal-saving" style="font-size: 0.88rem; font-weight: 800; color: var(--success);">Potential Saving: ₹96 / mo</span>
+    </div>
+    <h4 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 12px;">Recommended Implementation Steps:</h4>
+    <div id="tip-modal-steps" style="margin-bottom: 20px;"></div>
+    <div style="text-align: right;">
+      <button class="btn btn-primary" onclick="window.energyApp.closeModal('tip-steps-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- 5. Detailed Bill Computation Modal -->
+<div id="bill-calculation-modal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">
+        <span class="material-symbols-rounded" style="color: var(--primary);">receipt_long</span>
+        Detailed Bill Computation
+      </div>
+      <button class="icon-btn" onclick="window.energyApp.closeModal('bill-calculation-modal')">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+    <div id="slab-breakdown-details" style="margin-bottom: 20px;"></div>
+    <div style="text-align: right;">
+      <button class="btn btn-primary" onclick="window.energyApp.closeModal('bill-calculation-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- 6. Settings Modal -->
+<div id="settings-modal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">
+        <span class="material-symbols-rounded" style="color: var(--primary);">tune</span>
+        Settings & Demo Controls
+      </div>
+      <button class="icon-btn" onclick="window.energyApp.closeModal('settings-modal')">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+
+    <!-- Data Source -->
+    <div style="margin-bottom: 20px;">
+      <h4 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 4px;">Data Source</h4>
+      <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px;">Select between simulated meter readings and external hardware APIs</p>
+      
+      <div class="card" style="padding: 12px; margin-bottom: 8px; border-color: var(--primary); display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="material-symbols-rounded" style="color: var(--primary);">sensors</span>
+          <div>
+            <div style="font-weight: 700; font-size: 0.9rem;">Demo Data (Simulated Meter)</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Calibrated residential consumption profile</div>
+          </div>
+        </div>
+        <span class="material-symbols-rounded" style="color: var(--primary);">check_circle</span>
+      </div>
+
+      <div class="card" style="padding: 12px; opacity: 0.6; display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="material-symbols-rounded">cloud_off</span>
+          <div>
+            <div style="font-weight: 700; font-size: 0.9rem;">Smart Meter API / IoT Device <span class="badge-tag" style="margin-left: 6px;">Coming Soon</span></div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Direct integration with ESP32, Modbus, or MQTT broker</div>
+          </div>
+        </div>
+        <span class="material-symbols-rounded">radio_button_unchecked</span>
+      </div>
+    </div>
+
+    <!-- Simulation Speed Selector -->
+    <div style="margin-bottom: 20px;">
+      <h4 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 4px;">Simulation Speed</h4>
+      <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px;">Control how quickly real-time active power values drift</p>
+
+      <div class="segmented-toggle" id="sim-speed-selector">
+        <div class="segmented-option selected" data-speed="normal" onclick="window.energyApp.setSimulationSpeed('normal')">
+          Normal (6s)
+        </div>
+        <div class="segmented-option" data-speed="fast" onclick="window.energyApp.setSimulationSpeed('fast')">
+          Fast (2s)
+        </div>
+        <div class="segmented-option" data-speed="paused" onclick="window.energyApp.setSimulationSpeed('paused')">
+          Paused
+        </div>
+      </div>
+      <div id="settings-live-load" style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);">
+        Current Active Load: 1.84 kW • Status: Active
+      </div>
+    </div>
+
+    <!-- Appearance Mode Selector -->
+    <div style="margin-bottom: 20px;">
+      <h4 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 4px;">Interface Theme</h4>
+      <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px;">Switch between high-contrast dark theme and clean light theme</p>
+
+      <div style="display: flex; gap: 10px;">
+        <button class="btn btn-outlined" style="flex: 1;" onclick="window.energyApp.applyTheme('light')">
+          <span class="material-symbols-rounded">light_mode</span> Light
+        </button>
+        <button class="btn btn-outlined" style="flex: 1;" onclick="window.energyApp.applyTheme('dark')">
+          <span class="material-symbols-rounded">dark_mode</span> Dark
+        </button>
+      </div>
+    </div>
+
+    <!-- Hardware Architecture Card -->
+    <div class="card" style="padding: 14px; background: var(--surface-variant); margin-bottom: 20px;">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <span class="material-symbols-rounded" style="color: var(--primary);">hub</span>
+        <strong style="font-size: 0.88rem;">Hardware & IoT Integration Pipeline</strong>
+      </div>
+      <p style="font-size: 0.8rem; line-height: 1.45; color: var(--text-secondary);">
+        1. <strong>Hardware</strong>: ESP32 + CT Sensor (SCT-013) / PZEM-004T measures RMS voltage and current.<br>
+        2. <strong>Transport</strong>: Publishes MQTT payloads / JSON via REST API.<br>
+        3. <strong>Client</strong>: EnergyWatch consumes the data stream without modifying any UI or calculation logic.
+      </p>
+    </div>
+
+    <!-- Reset Demo Data -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <button class="btn btn-outlined" style="color: var(--alert); border-color: var(--alert-border);" onclick="window.energyApp.openModal('reset-confirm-modal')">
+        <span class="material-symbols-rounded">restore</span> Reset Demo Data
+      </button>
+      <button class="btn btn-primary" onclick="window.energyApp.closeModal('settings-modal')">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- 7. Reset Confirm Dialog -->
+<div id="reset-confirm-modal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 480px;">
+    <div class="modal-header">
+      <div class="modal-title" style="color: var(--alert);">
+        <span class="material-symbols-rounded">warning</span>
+        Reset Demo Data?
+      </div>
+      <button class="icon-btn" onclick="window.energyApp.closeModal('reset-confirm-modal')">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px;">
+      This will restore all simulated meter readings, appliances, billing parameters, and conservation tips back to their default presentation values (184.5 kWh monthly total, ₹1,576 estimated bill).
+    </p>
+    <div style="display: flex; justify-content: flex-end; gap: 10px;">
+      <button class="btn btn-outlined" onclick="window.energyApp.closeModal('reset-confirm-modal')">Cancel</button>
+      <button class="btn btn-primary" style="background-color: var(--alert);" onclick="window.energyApp.resetDemoData()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container for Notifications -->
+<div id="toast-container" class="toast-container"></div>
+
+<!-- Application Logic -->
+<script src="app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,200 @@
+================================================================================
+ENERGYWATCH — SMART HOME ENERGY MONITORING & BILL FORECASTING DASHBOARD
+PROJECT REPORT, PRESENTATION SCRIPT & TECHNICAL DOCUMENTATION
+================================================================================
+
+1. PROJECT OVERVIEW
+--------------------------------------------------------------------------------
+Project Name: EnergyWatch
+Target Domain: Smart Home Energy Management, IoT Energy Telemetry & Green Computing
+Frameworks & Tech: Flutter (Material 3), Vanilla HTML5, CSS3 Custom Properties, JavaScript
+Author / Presenter: Amitabh / TellurOm
+Live Calibrated Metrics:
+  - Total Monthly Baseline Consumption: 184.5 kWh
+  - Today's Energy Consumption: 6.72 kWh (5.4% reduction vs yesterday's 7.10 kWh)
+  - Estimated Monthly Electricity Bill: ₹1,576.00 (at ₹8.00/unit base tariff)
+  - Potential Monthly Savings: ₹286.00 / month
+  - Conserved Energy Potential: ~35.8 kWh / month
+  - Carbon Offset: ~29.3 kg CO2 / month
+  - Live Active Power Telemetry: 1.84 kW (realistic residential drift: 1.70 - 2.15 kW)
+
+
+2. PROBLEM STATEMENT & SOLUTION
+--------------------------------------------------------------------------------
+Core Problem:
+Traditional utility bills arrive 3 to 4 weeks after electricity has been consumed.
+Consumers have zero real-time visibility into:
+  1. Instantaneous power draw across household appliances.
+  2. Disaggregation — which specific appliance (AC, Geyser, Refrigerator) drives peak costs.
+  3. Realistic end-of-month bill forecasts before it is too late to make adjustments.
+  4. Specific, measurable habits to lower both expenses and carbon emissions.
+
+EnergyWatch Solution:
+  1. Live Active Demand Monitoring: Visualizing real-time active load in kW.
+  2. Consumption History & Peak Hour Highlighting: 24-Hour load profile showing residential
+     evening peak hours (6:00 PM – 10:00 PM) in amber warnings.
+  3. Appliance-Level Tracking: 10 appliances tracked with power ratings, daily runtimes,
+     monthly kWh, efficiency ratings, and an interactive runtime adjustment simulator.
+  4. Dual Tariff Bill Estimator: Supports both Flat Single Rate and Progressive Tiered Slab
+     Billing with line-by-line itemized computation.
+  5. Actionable Savings Engine: 6 prioritized habits with step-by-step guidance and dynamic
+     cost/CO2 reduction tracking.
+
+
+3. HARDWARE-READY DECOUPLED ARCHITECTURE
+--------------------------------------------------------------------------------
+Architecture Pipeline:
+[ Physical IoT Sensors ]  -->  [ Microcontroller ]  -->  [ Network Transport ]  -->  [ EnergyDataSource ]  -->  [ EnergyRepository ]  -->  [ UI Layer ]
+(SCT-013 CT Clamp /           (ESP32 / ESP8266)         (MQTT Broker / REST)        (Abstract Contract)        (Single Source of Truth)   (Flutter / Web)
+ PZEM-004T AC Module)
+
+Decoupling Principle:
+The software architecture implements the Repository Pattern with an abstract EnergyDataSource.
+Because physical sensors were simulated for this presentation prototype, future hardware
+integration requires only writing a single ApiEnergyDataSource class. The UI, state management,
+charts, and calculations require ZERO code modifications.
+
+
+4. DETAILED VIVA & PRESENTATION SCRIPT (STEP-BY-STEP)
+--------------------------------------------------------------------------------
+[Opening Pitch - 60 Seconds]
+"Good morning/afternoon Sir/Ma'am. Today I am presenting EnergyWatch — an IoT-ready Home
+Energy Monitoring and Predictive Bill Forecasting Dashboard.
+Traditional meters leave consumers blind until the bill arrives. EnergyWatch bridges this
+gap with real-time active demand telemetry, appliance-level tracking, progressive slab tariff
+forecasting, and data-driven carbon reduction insights."
+
+[Step 1: Dashboard Screen]
+- Show: Executive Summary Cards (Today 6.72 kWh, Monthly 184.5 kWh, Bill ₹1,576, Savings ₹286).
+- Point Out: Live Active Demand Card (1.84 kW) with pulsing live indicator.
+- Explain: "The live load drifts realistically between 1.70 kW and 2.15 kW. The 7-day trend
+  chart displays smooth bezier curves with dynamic hover tooltips. Today's usage timeline
+  tracks morning, afternoon, and evening peak intervals."
+
+[Step 2: Consumption History & 24-Hour Profile]
+- Show: Filter chips (7D, 30D, 90D, Custom) and 4 metric cards (Total, Average, Peak, Standby).
+- Point Out: 24-Hour Load Profile Bar Chart with Amber bars between 6 PM and 10 PM.
+- Explain: "Evening hours are residential grid peak hours. EnergyWatch visually flags them
+  in amber to encourage load shifting, helping prevent grid stress and surcharge tariffs."
+
+[Step 3: Appliance Tracking & Runtime Simulator (Star Feature!)]
+- Show: 10 tracked household appliances sorted by energy share.
+- Point Out: Air Conditioner is the top consumer at 39% (72.4 kWh/mo).
+- Action: Click on Air Conditioner to open details modal, then drag the Runtime Slider!
+- Explain: "Our interactive simulator allows homeowners to drag their daily AC usage from
+  5.2 hours down to 3 hours, immediately showing projected monthly kWh savings and exact
+  bill reduction in real time."
+
+[Step 4: Bill Estimator & Progressive Slab Calculation]
+- Show: Tariff switcher (Flat Rate vs Progressive Slab Rate).
+- Action: Click 'View Detailed Computation' to reveal itemized slab charges.
+- Explain: "Utilities use progressive tiered slabs. We calculate:
+  Tier 1: 0–100 units @ ₹4.50 = ₹450
+  Tier 2: 101–200 units (84.5 units) @ ₹6.00 = ₹507
+  Energy subtotal = ₹957 + ₹100 fixed meter charge = ₹1,057 total."
+
+[Step 5: Savings Habits & Environmental Impact]
+- Show: Hero savings banner (₹286/month, 35.8 kWh conserved, 29.3 kg CO2 offset).
+- Action: Click 'View Steps' for AC optimization, then click 'Mark as Applied'.
+- Explain: "Users can adopt habits to lower their carbon footprint. The progress bar
+  dynamically updates adopted habits and projected environmental offsets."
+
+
+5. APPLIANCE CONSUMPTION INVENTORY (10 APPLIANCES)
+--------------------------------------------------------------------------------
+1. Air Conditioner: 1.50 kW | 5.2 hrs/day | 72.4 kWh/mo | 39% share | ₹579/mo | Score: 72%
+2. Water Heater: 2.00 kW | 0.65 hrs/day | 38.7 kWh/mo | 21% share | ₹310/mo | Score: 68%
+3. Refrigerator: 0.18 kW | 24.0 hrs/day | 25.8 kWh/mo | 14% share | ₹206/mo | Score: 85%
+4. Washing Machine: 0.85 kW | 0.50 hrs/day | 12.9 kWh/mo | 7% share | ₹103/mo | Score: 78%
+5. Smart Television: 0.12 kW | 4.50 hrs/day | 9.2 kWh/mo | 5% share | ₹74/mo | Score: 80%
+6. Desktop Computer: 0.22 kW | 4.00 hrs/day | 7.4 kWh/mo | 4% share | ₹59/mo | Score: 76%
+7. Ceiling Fans (3x): 0.09 kW | 14.0 hrs/day | 7.4 kWh/mo | 4% share | ₹59/mo | Score: 92%
+8. LED Smart Lighting: 0.11 kW | 5.00 hrs/day | 5.5 kWh/mo | 3% share | ₹44/mo | Score: 90%
+9. Microwave Oven: 1.20 kW | 0.15 hrs/day | 3.7 kWh/mo | 2% share | ₹30/mo | Score: 75%
+10. Water Pump: 0.75 kW | 0.16 hrs/day | 3.5 kWh/mo | 2% share | ₹28/mo | Score: 82%
+TOTAL HOUSEHOLD CONSUMPTION: 184.5 kWh / month
+
+
+6. ACTIONABLE CONSERVATION HABITS
+--------------------------------------------------------------------------------
+1. AC Temperature Optimization: Set thermostat to 24-26°C. Saves ₹96/mo (-6.5%).
+2. Water Heater Scheduling: Limit runtime to 15 min before bath. Saves ₹71/mo (-4.8%).
+3. Eliminate Vampire Standby Load: Unplug idle entertainment devices. Saves ₹42/mo (-2.8%).
+4. LED Lighting Upgrades: Replace CFLs and use natural daylight. Saves ₹38/mo (-2.5%).
+5. Refrigerator Coil Maintenance: Clean rear coils & ensure 10cm gap. Saves ₹24/mo (-1.6%).
+6. Peak Load Shifting: Run laundry/pumps during off-peak morning hours. Saves ₹15/mo (-1.0%).
+TOTAL MONTHLY POTENTIAL SAVINGS: ₹286 / month (19.4% overall reduction)
+
+
+7. MATHEMATICAL FORMULAS
+--------------------------------------------------------------------------------
+1. Appliance Daily Energy:
+   Energy (kWh) = Power (kW) × Runtime (hours)
+
+2. Appliance Percentage Share:
+   Share (%) = (Appliance Monthly kWh / Total Household Monthly kWh) × 100
+
+3. Flat Rate Electricity Bill:
+   Energy Charge = Consumption (kWh) × Rate (₹/kWh)
+   Tax Charge = Energy Charge × (Tax % / 100)
+   Total Bill = Energy Charge + Fixed Meter Charge + Tax Charge
+
+4. Progressive Tiered Slab Bill (Utility Standard):
+   For each Tier_i with bounds [Min_i, Max_i] and Rate_i:
+     Units_in_Tier = min(Remaining_Units, Max_i - Min_i)
+     Tier_Cost = Units_in_Tier × Rate_i
+     Total_Energy_Charge = sum(Tier_Cost)
+   Total Bill = Total_Energy_Charge + Fixed Charge + Tax Charge
+
+5. Potential Monthly Cost Savings:
+   Energy_Saved (kWh) = Monthly_Consumption × (Reduction_% / 100)
+   Cost_Savings (₹) = Energy_Saved × Rate_per_kWh
+
+6. Carbon Dioxide Emission Offset:
+   CO2_Offset (kg) = Conserved_kWh × 0.82 kg CO2/kWh (Grid average factor)
+
+
+8. SOURCE CODE FILE DIRECTORY MAP
+--------------------------------------------------------------------------------
+Flutter Architecture:
+- lib/main.dart                     --> App entry point & provider injection
+- lib/core/constants/               --> AppConstants, slab tiers definitions
+- lib/core/theme/                   --> AppColors, AppTheme (Material 3 Light/Dark)
+- lib/core/utils/calculations.dart  --> Pure mathematical formulas & billing models
+- lib/core/utils/formatters.dart    --> Currency, energy, date/time formatters
+- lib/models/                       --> Appliance, EnergyReading, BillingRate, SavingsTip
+- lib/providers/energy_provider.dart--> ChangeNotifier state & live simulation timer
+- lib/repositories/                 --> EnergyRepository (Repository pattern)
+- lib/data/mock_energy_data.dart    --> 30-day calibrated telemetry dataset
+- lib/screens/                      --> Dashboard, Consumption, Appliances, Details, Bill, Savings, Settings
+- lib/widgets/                      --> StatCard, ConsumptionChart, ApplianceCard, UsageProgress, etc.
+
+Plain Web & Figma Export Architecture:
+- build/web/index.html              --> Standalone semantic HTML5 web application
+- build/web/style.css               --> CSS custom variables, dark mode, card designs
+- build/web/app.js                  --> Client-side state engine, SVG charts, simulator
+- build/web/energywatch_figma.html  --> Inlined 5-screen single file export for Figma
+- screenshots/                      --> 7 clean high-resolution presentation screenshots
+
+
+9. TOP VIVA QUESTIONS & ANSWERS
+--------------------------------------------------------------------------------
+Q: Is this connected to real physical IoT hardware?
+A: No, this is running on realistic simulated energy telemetry because physical CT clamp
+   sensors and ESP32 microcontrollers were not connected to this device. However, the software
+   is architected with an abstract EnergyDataSource contract, so connecting physical hardware
+   via REST or MQTT requires zero changes to the UI or business logic.
+
+Q: How does the progressive slab tariff work?
+A: Instead of multiplying all units by a single rate, consumption is split into tiers:
+   first 100 units at ₹4.50, next 100 units at ₹6.00, next 100 units at ₹8.00, and above 300
+   at ₹10.00. This models actual utility billing accurately.
+
+Q: Why build both Flutter and Plain HTML/CSS/JS?
+A: Flutter provides a robust cross-platform mobile codebase for Android and iOS. The plain
+   HTML5/CSS3/Vanilla JS version provides a lightweight (<80KB), instant-loading web app that
+   has zero WebAssembly overhead and can be imported directly into Figma via html.to.design.
+
+================================================================================
+END OF PROJECT REPORT & PRESENTATION GUIDE
+================================================================================
